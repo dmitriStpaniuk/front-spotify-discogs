@@ -1,0 +1,38 @@
+"use client";
+import {
+  HomeIcon,
+  MagnifyingGlassIcon,
+  BuildingLibraryIcon,
+} from "@heroicons/react/16/solid";
+import { useSession, signOut } from "next-auth/react";
+import Link from "next/link";
+import React from "react";
+
+export const Sidebar = () => {
+  const session = useSession();
+  return (
+    <div className="text-gray-400 pt-4 pl-4 text-sm border-r border-gray-900">
+      <div className="space-y-4">
+        <button className="flex items-center space-x-2 hover:text-white">
+          <HomeIcon className="h-5" />
+          <p>Home</p>
+        </button>
+        <button className="flex items-center space-x-2 hover:text-white">
+          <MagnifyingGlassIcon className="h-5" />
+          <p>Search</p>
+        </button>
+        <button className="flex items-center space-x-2 hover:text-white">
+          <BuildingLibraryIcon className="h-5" />
+          <p>Your Library</p>
+        </button>
+        <hr className="border-t-[0.1px] border-gray-900" />
+      </div>
+      {session?.data ? (
+        <Link href="#" onClick={() => signOut}>
+          sign out
+        </Link>
+      ) : (<Link href='/api/auth/signin'>sign in</Link>)
+    }
+    </div>
+  );
+};
