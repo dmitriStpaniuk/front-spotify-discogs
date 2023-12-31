@@ -8,4 +8,6 @@ export const config = {
 	updateAge: Number(process.env.SESSION_UPDATE_AGE!),
 	signIn: process.env.SIGNIN_PATH!,
 	signOut: process.env.SIGNOUT_PATH!,
+	discogsId: process.env.DISCOGS_CLIENT_ID!,
+	discogsSecret: process.env.DISCOGS_CLIENT_SECRET!
 };

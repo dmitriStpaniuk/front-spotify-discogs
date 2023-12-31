@@ -4,12 +4,14 @@ import {
   MagnifyingGlassIcon,
   BuildingLibraryIcon,
 } from "@heroicons/react/16/solid";
+import { Button } from "@mantine/core";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
 export const Sidebar = () => {
   const session = useSession();
+  console.log(session);
   return (
     <div className="text-gray-400 pt-4 pl-4 text-sm border-r border-gray-900">
       <div className="space-y-4">
@@ -28,10 +30,10 @@ export const Sidebar = () => {
         <hr className="border-t-[0.1px] border-gray-900" />
       </div>
       {session?.data ? (
-        <Link href="#" onClick={() => signOut}>
+        <Button component={Link} href={"/"} onClick={() => signOut({ callbackUrl: '/' })}>
           sign out
-        </Link>
-      ) : (<Link href='/api/auth/signin'>sign in</Link>)
+        </Button>
+      ) : (<Button component={Link} href='/api/auth/signin'>sign in</Button>)
     }
     </div>
   );
