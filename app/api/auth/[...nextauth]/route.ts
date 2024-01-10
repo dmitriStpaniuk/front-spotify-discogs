@@ -5,13 +5,12 @@ import { loginUrl } from '@/app/lib/spotify';
 import NextAuth, { Account, Profile, Session, User } from 'next-auth';
 import { refreshAccesToken } from '@/app/lib/token';
 import DiscogsProvider from '@/app/lib/discogs';
-import { fetchUserStore } from '@/app/state/user';
 
 if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
 	throw new Error('Environment variables SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET are not defined');
 }
 
-type ExtendedUser = User & { accessToken: string };
+export type ExtendedUser = User & { accessToken: string };
 
 
 const handler = NextAuth(
@@ -45,10 +44,15 @@ const handler = NextAuth(
 						(params.session.user as ExtendedUser).accessToken = params.token.accessToken;
 					}
 				}
-				const user = await fetchUserStore.getState().fetchUser();
+				// console.log('SESSION', params.session);
+				// console.log('Token', params.token);
 				return params.session;
 			},
 			async jwt(params: { token: JWT; user?: User; profile?: Profile; isNewUser?: boolean; account?: Account | null }) {
+				// console.log('JWT global', params.token);
+				// console.log('JWT user', params.user);
+				// console.log('JWT profile', params.profile);
+				// console.log('JWT account', params.account);
 				if (params.account?.provider === 'discogs') {
 					const newToken: JWT = {
 						...params.token,
@@ -56,10 +60,10 @@ const handler = NextAuth(
 						secretDiscogsToken: params.account.oauth_token_secret,
 						nameNetwork: params.account.provider,
 					}
-					console.log('DISCOGS TOKEN', newToken);
+					// console.log('DISCOGS TOKEN', newToken);
 					return newToken;
 				}
-				if (params.token.provider === 'spotify' && params.account && params.user && params.account.expires_at) {
+				if (params.account?.provider === 'spotify' && params.account && params.user && params.account.expires_at) {
 					const newToken: JWT = {
 						...params.token,
 						accessToken: params.account.access_token,
@@ -68,6 +72,8 @@ const handler = NextAuth(
 						userName: params.account.providerAccountId,
 						provider: params.account.provider,
 					};
+					// console.log('SPOTIFY TOKEN', newToken);
+					
 					return newToken;
 				}
 
@@ -77,7 +83,7 @@ const handler = NextAuth(
 					return params.token;
 				}
 
-				console.log('ACCESS TOKEN HAS EXPIRED, REFRESHING...');
+				console.log(`ACCESS TOKEN HAS EXPIRED, REFRESHING...: ${params.token.accessTokenExpires}`);
 				return refreshAccesToken(params.token);
 
 			},

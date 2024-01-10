@@ -3,6 +3,7 @@ export type User = {
   email: string,
   password: string,
 }
+
 export type GetUserResponse = {
   id: string,
   name: string,
@@ -10,11 +11,11 @@ export type GetUserResponse = {
   password: string,
   photo: string,
   verified: boolean,
-  role: 'USER'| 'ADMIN',
+  role: 'USER' | 'ADMIN',
   verificationCode: string,
   createdAt: Date,
   updatedAt: Date,
-  provider:string,
+  provider: string,
   passwordResetToken: string,
   passwordResetAt: Date,
 }
