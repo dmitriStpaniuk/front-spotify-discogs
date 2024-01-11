@@ -2,14 +2,20 @@ import { getToken } from "next-auth/jwt";
 import { config } from "./app/lib/config";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest ){
-    const token = await getToken({req, secret: config.jwtSecret});
-    const {pathname} = req.nextUrl;
-    if(pathname.includes('/api/auth/') || token){
+export async function middleware(req: NextRequest) {
+    const token = await getToken({ req, secret: config.jwtSecret });
+    const { pathname } = req.nextUrl;
+    if (pathname.includes('/api/auth/') || token) {
         return NextResponse.next()
     }
-    if(!token && !pathname.startsWith('/')){
-    // if(!token && pathname !== '/'){
+    if (!token && !pathname.startsWith('/')) {
+        // if(!token && pathname !== '/'){
         return NextResponse.redirect(new URL('/api/auth/signin', req.url));
     }
+    if (req.nextUrl.pathname.startsWith('/spotify')) {
+        return NextResponse.rewrite(new URL('/api/auth/signin', req.url))
+      }
+    if (req.nextUrl.pathname.startsWith('/profile')) {
+        return NextResponse.rewrite(new URL('/api/auth/signin', req.url))
+      }
 }

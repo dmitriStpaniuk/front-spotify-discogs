@@ -1,5 +1,5 @@
 import SpotifyWebApi from 'spotify-web-api-node';
-import {config} from '@/app/lib/config';
+import { config } from '@/app/lib/config';
 
 const scopes = [
 	'user-read-email',
@@ -32,4 +32,4 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 export default spotifyApi;
-export {loginUrl};
+export { loginUrl };

@@ -1,9 +1,9 @@
 import { useSpotify } from "@/app/lib/useSpotify";
-import { Paper, Text, Container, Stack, Card } from "@mantine/core";
+import { Card } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
-export const Playlist = async () => {
+export const Playlist = () => {
   const { data: session, status } = useSession();
   const [playlists, setPlaylists] = useState<
     SpotifyApi.PlaylistObjectSimplified[]
@@ -18,13 +18,20 @@ export const Playlist = async () => {
         .then((data) => setPlaylists(data.body.items));
     }
   }, [session, status, spotifyApi]);
-
+  console.log(playlists);
   return (
     <>
-      {playlists.map((playlist, index) => (
-        <Card shadow="sm" padding="lg" radius="md" withBorder key={playlist.id}>
-          {playlist.name}
-        </Card>
+      {playlists.map((playlist) => (
+          <Card
+            style={{ cursor: "pointer", margin: '2px' }}
+            shadow="sm"
+            padding="sm"
+            radius="md"
+            withBorder
+            key={playlist.id}
+          >
+            {playlist.name}
+          </Card>
       ))}
     </>
   );

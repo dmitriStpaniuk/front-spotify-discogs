@@ -73,7 +73,7 @@ const handler = NextAuth(
 						provider: params.account.provider,
 					};
 					// console.log('SPOTIFY TOKEN', newToken);
-					
+
 					return newToken;
 				}
 

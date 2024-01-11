@@ -1,4 +1,3 @@
-import { getServerSession } from "next-auth";
 import { Sidebar } from "./components/Sidebar";
 
 export default async function  Home() {
