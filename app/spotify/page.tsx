@@ -1,26 +1,35 @@
 "use client";
-import { AppShell, Divider, LoadingOverlay } from "@mantine/core";
+import { AppShell, LoadingOverlay, Alert, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { Suspense, useEffect, useState } from "react";
-import Loading from "./loading";
-import { Playlist } from "./components/Playlist";
-import { ProvidersSpotifyDiscogs } from "./components/ProvidersSpotifyDiscogs";
-import { Header } from "./components/Header";
+import { useEffect, useState } from "react";
+import { Header } from "../components/header/Header";
 import React from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { MenuTabs } from "./components/MenuTabs";
+import { errorStore } from "../state/spotify/error";
+import { IconExclamationCircle, IconLogin } from "@tabler/icons-react";
 
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [visible, setVisible] = useState(true);
+  const [authError, setAuthError] = useState(false);
 
-  const [visible, setVisible] = useState(true)
-  const session = useSession()
-
+  const session = useSession();
+  const errorState = errorStore((state) => state.message);
+  
+  console.log(authError)
   useEffect(() => {
     if (session.status === "authenticated") {
-      setVisible(false)
+      setVisible(false);
     }
-  }, [session.status])
+  }, [session.status]);
+
+  useEffect(() => {
+    if (errorState.includes("You should re-authenticate the user")) {
+      setAuthError(true);
+    }
+  }, [errorState, authError]);
 
   return (
     <AppShell
@@ -37,32 +46,40 @@ export default function Spotify() {
         collapsed: { desktop: false, mobile: true },
       }}
     >
-      <LoadingOverlay
+      { !authError && <LoadingOverlay
         visible={visible}
         zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 7, bg:'dark'}}
+        overlayProps={{ radius: "sm", blur: 7, bg: "dark" }}
         loaderProps={{ color: "green", type: "bars" }}
+      /> }
+      <Header
+        mobileOpened={mobileOpened}
+        desktopOpened={desktopOpened}
+        toggleMobile={toggleMobile}
+        toggleDesktop={toggleDesktop}
       />
-        <Header
-          mobileOpened={mobileOpened}
-          desktopOpened={desktopOpened}
-          toggleMobile={toggleMobile}
-          toggleDesktop={toggleDesktop}
-        />
-        <AppShell.Navbar p="md">
-          Playlist
-          <Divider my="xs" />
-          <Suspense fallback={<Loading />}>
-            <Playlist />
-          </Suspense>
-        </AppShell.Navbar>
-        <AppShell.Main>
-          <h1 className="">Welcome to Spotify and Discogs</h1>
-          <ProvidersSpotifyDiscogs />
-        </AppShell.Main>
-        <AppShell.Aside p="md">Aside</AppShell.Aside>
-        <AppShell.Footer p="md">Footer</AppShell.Footer>
-      
+      <AppShell.Navbar p="md">
+        <MenuTabs />
+      </AppShell.Navbar>
+      <AppShell.Main>
+        <h1 className="">Welcome to Spotify and Discogs</h1>
+        {authError && (
+          <Alert
+            title="Ошибка аутентификации"
+            icon={ <IconExclamationCircle />}
+          >
+            Пожалуйста, повторите процесс аутентификации.
+            <NavLink
+              onClick={() => signIn("spotify")}
+              label="SignIn"
+              leftSection={<IconLogin stroke={1.5} size="1.3rem"/>}
+              style={{ width: '100px'}}
+            />
+          </Alert>
+        )}
+      </AppShell.Main>
+      <AppShell.Aside p="md">Aside</AppShell.Aside>
+      <AppShell.Footer p="md">Footer</AppShell.Footer>
     </AppShell>
   );
 }

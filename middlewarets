@@ -14,8 +14,8 @@ export async function middleware(req: NextRequest) {
     }
     if (req.nextUrl.pathname.startsWith('/spotify')) {
         return NextResponse.rewrite(new URL('/api/auth/signin', req.url))
-      }
+    }
     if (req.nextUrl.pathname.startsWith('/profile')) {
         return NextResponse.rewrite(new URL('/api/auth/signin', req.url))
-      }
+    }
 }

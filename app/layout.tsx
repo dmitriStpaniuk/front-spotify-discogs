@@ -4,6 +4,8 @@ import "./globals.css";
 import '@mantine/core/styles.css';
 import { Providers } from "./components/Providers";
 import { ColorSchemeScript } from "@mantine/core";
+import { getServerSession } from "next-auth";
+import authOptions from "@/app/api/auth/[...nextauth]/authOptions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +19,14 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript/>
       </head>
       <body className={inter.className}>
-        <Providers>
+        <Providers session={session}>
           {children}
         </Providers>
       </body>

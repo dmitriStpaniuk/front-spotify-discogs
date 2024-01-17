@@ -1,35 +1,50 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import { config } from '@/app/lib/config';
+import { getSession } from "next-auth/react";
 
 const scopes = [
 	'user-read-email',
+	'user-read-private',
+	'user-create-partner',
+	'user-manage-partner',
+	'user-manage-entitlements',
+	'user-soa-unlink',
+	'user-soa-link',
+	'user-read-private',
+	'user-read-email',
+	'user-library-read',
+	'user-library-modify',
+	'user-read-recently-played',
+	'user-top-read',
+	'user-read-playback-position',
+	'user-follow-read',
+	'user-follow-modify',
+	'playlist-modify-public',
+	'playlist-modify-private',
 	'playlist-read-private',
 	'playlist-read-collaborative',
 	'streaming',
-	'user-read-private',
-	'user-library-read',
-	'user-top-read',
+	'app-remote-control',
 	'user-read-playback-state',
 	'user-modify-playback-state',
 	'user-read-currently-playing',
-	'user-read-recently-played',
-	'user-follow-read',
-	// 'user-follow-modify',
-].join(',');
+].join(' ');
 
 const params = {
 	scopes,
 };
-
+ 
 const queryParamString = new URLSearchParams(params);
 
 const loginUrl = 'https://accounts.spotify.com/authorize?' + queryParamString.toString();
 
-
 const spotifyApi = new SpotifyWebApi({
 	clientId: config.spotifyClientId,
 	clientSecret: config.spotifyClientSecret,
+	redirectUri:'http://localhost:3000/api/auth/callback/spotify'
 });
+
+
 
 export default spotifyApi;
 export { loginUrl };

@@ -22,6 +22,15 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/auth/[...nextauth].ts", "middleware.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/api/auth/[...nextauth].ts",
+    "middlewarets",
+    "app/lib/spotifyjs",
+    "app/api/auth/[...nextauth]/routetsю"
+, "middlewarets"  ],
   "exclude": ["node_modules"]
 }
