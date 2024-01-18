@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Tabs } from "@mantine/core";
-import { Playlist } from "./PlaylistTabMenu";
-// import { SavedUserAlbums } from "./AlbumTabsMenu";
-import { Artist } from "./ArtistTabsMenu";
+import { Tabs, LoadingOverlay } from "@mantine/core";
+import { CurrentUserPlaylists } from "./TabMenuPlaylist";
+import { Artist } from "./TabsMenuArtist";
+import { SavedUserAlbums } from "./TabsMenuAlbum";
+import { useDisclosure } from '@mantine/hooks';
 
 const data = [
   { title: "Playlist", colore: "green" },
@@ -11,14 +12,14 @@ const data = [
 ];
 
 export const MenuTabs = () => {
-  // const router = useRouter();
+
   const [selectedTab, setSelectedTab] = useState("Playlist");
   const handleTabClick = (tabTitle: string) => {
     setSelectedTab(tabTitle);
   };
+
   return (
-    <Tabs
-    >
+    <Tabs>
       <Tabs.List defaultValue="Playlist">
         {data.map((item) => {
           return (
@@ -33,8 +34,9 @@ export const MenuTabs = () => {
           );
         })}
       </Tabs.List>
-      {selectedTab === "Playlist" && <Playlist />}
-      {/* {selectedTab === "Album" && <SavedUserAlbums />} */}
+
+      {selectedTab === "Playlist" && <CurrentUserPlaylists />}
+      {selectedTab === "Album" && <SavedUserAlbums />}
       {/* {selectedTab === "Artist" && <Artist />} */}
     </Tabs>
   );
