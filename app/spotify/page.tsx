@@ -1,7 +1,7 @@
 "use client";
 import { AppShell, Alert, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Header } from "../components/header/Header";
 import React from "react";
 import { signIn } from "next-auth/react";
@@ -12,14 +12,11 @@ import { errorStore } from "../stores/spotify/errorStore";
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
-  const [authError, setAuthError] = useState(false);
 
   const errorState = errorStore((state) => state.message);
 
-  useEffect(() => {
-    if (errorState.includes("You should re-authenticate the user")) {
-      setAuthError(true);
-    }
+  const authError = useMemo(() => {
+    return errorState.includes("You should re-authenticate the user");
   }, [errorState]);
 
   return (
@@ -27,7 +24,7 @@ export default function Spotify() {
       header={{ height: 60 }}
       footer={{ height: 60 }}
       navbar={{
-        width: 450,
+        width: 470,
         breakpoint: "sm",
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
@@ -43,7 +40,7 @@ export default function Spotify() {
         toggleMobile={toggleMobile}
         toggleDesktop={toggleDesktop}
       />
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar p="xs">
         <MenuTabs />
       </AppShell.Navbar>
       <AppShell.Main>

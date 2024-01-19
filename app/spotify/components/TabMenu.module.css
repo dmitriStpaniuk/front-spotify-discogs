@@ -1,0 +1,15 @@
+.link {
+  padding: rem(5px);
+  border-radius: rem(5px);
+  @media (max-width: --mantine-breakpoint-sm) {
+    height: rem(42px);
+    width: 100%;
+  }
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+}

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Tabs, LoadingOverlay } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import { CurrentUserPlaylists } from "./TabMenuPlaylist";
 import { Artist } from "./TabsMenuArtist";
 import { SavedUserAlbums } from "./TabsMenuAlbum";
-import { useDisclosure } from '@mantine/hooks';
 
 const data = [
   { title: "Playlist", colore: "green" },
@@ -37,7 +36,7 @@ export const MenuTabs = () => {
 
       {selectedTab === "Playlist" && <CurrentUserPlaylists />}
       {selectedTab === "Album" && <SavedUserAlbums />}
-      {/* {selectedTab === "Artist" && <Artist />} */}
+      {selectedTab === "Artist" && <Artist />}
     </Tabs>
   );
 };

@@ -4,6 +4,8 @@ import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import { useUserPlaylistsStore } from "@/app/stores/spotify/playlistsStore";
 import { useDisclosure } from "@mantine/hooks";
+import { DropdownMenu } from "./DropdownMenu";
+import classes from "./TabMenu.module.css";
 
 export const CurrentUserPlaylists = () => {
   const [visible, { close }] = useDisclosure(true);
@@ -15,7 +17,7 @@ export const CurrentUserPlaylists = () => {
   useEffect(() => {
     fetchUserPlaylists({ sdk }).then(() => {
       close();
-    });;
+    });
   }, []);
 
   return (
@@ -23,7 +25,7 @@ export const CurrentUserPlaylists = () => {
       <LoadingOverlay
         visible={visible}
         zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 11}}
+        overlayProps={{ radius: "sm", blur: 11 }}
         loaderProps={{ color: "green", type: "oval" }}
       />
       <ScrollArea type="never">
@@ -34,29 +36,33 @@ export const CurrentUserPlaylists = () => {
             mt={10}
             style={{
               cursor: "pointer",
-              ":hover": { backgroundColor: "green" },
+              justifyContent: "space-between",
             }}
+            className={classes.link}
           >
-            <Avatar src={playlist.images[0]?.url} radius="md" />
-            <div>
-              <Text fz="xs" tt="uppercase" fw={700} c="gray">
-                {playlist.name}
-              </Text>
-              <Group>
-                <Text fz="xs" c="dimmed">
-                  {playlist.type}
+            <Group>
+              <Avatar src={playlist.images[0]?.url} radius="md" />
+              <div>
+                <Text fz="xs" tt="uppercase" fw={700} c="gray">
+                  {playlist.name}
                 </Text>
-                <IconPointFilled stroke={1.5} size="1rem" />
-                <Text fz="xs" c="dimmed">
-                  {playlist.owner.display_name}
-                </Text>
-              </Group>
-              <Group>
-                <Text fz="xs" c="dimmed">
-                  {playlist.tracks?.total} songs
-                </Text>
-              </Group>
-            </div>
+                <Group>
+                  <Text fz="xs" c="dimmed">
+                    {playlist.type}
+                  </Text>
+                  <IconPointFilled stroke={1.5} size="1rem" />
+                  <Text fz="xs" c="dimmed">
+                    {playlist.owner.display_name}
+                  </Text>
+                </Group>
+                <Group>
+                  <Text fz="xs" c="dimmed">
+                    {playlist.tracks?.total} songs
+                  </Text>
+                </Group>
+              </div>
+            </Group>
+            <DropdownMenu typeData="playlist" />
           </Group>
         ))}
       </ScrollArea>
