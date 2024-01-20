@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import { Avatar, Group, LoadingOverlay, ScrollArea, Text } from "@mantine/core";
-import { userAlbumStore } from "@/app/stores/spotify/albumStore";
 import { useDisclosure } from "@mantine/hooks";
 import { DropdownMenu } from "./DropdownMenu";
 import classes from "./TabMenu.module.css";
-import { userArtistsStore } from "@/app/stores/spotify/artistStore";
+import { userArtistsStore } from "@/app/stores/spotify/currentUserArtistStore";
 
-export const Artist = () => {
+export const CurrentUserSawedArtist = () => {
   const [visible, { close }] = useDisclosure(true);
   const userArtists = userArtistsStore((state) => state?.artists.items);
   const fetchUserArtists = userArtistsStore((state) => state?.fetchUserArtists);
@@ -26,7 +25,7 @@ export const Artist = () => {
         overlayProps={{ radius: "sm", blur: 11 }}
         loaderProps={{ color: "green", type: "oval" }}
       />
-      <ScrollArea type="never" h={"82vh"}>
+      <ScrollArea type="never" h={"81vh"}>
         {userArtists?.map((album) => (
           <Group
             wrap="nowrap"
@@ -45,16 +44,20 @@ export const Artist = () => {
                   {album.name}
                 </Text>
                 <Group>
-                  <Text fz="xs" c="dimmed" style={{ wordWrap: 'break-word', maxWidth: '300px' }}>
-                    {album.genres.map((genre) => genre)}
+                  <Text
+                    fz="xs"
+                    c="dimmed"
+                    style={{ wordWrap: "break-word", maxWidth: "300px" }}
+                  >
+                    {album.genres.join(", ") + "."}
                   </Text>
                 </Group>
               </div>
             </Group>
-            <DropdownMenu typeData = 'artist'/>
+            <DropdownMenu typeData="artist" />
           </Group>
         ))}
       </ScrollArea>
     </>
   );
-}
+};

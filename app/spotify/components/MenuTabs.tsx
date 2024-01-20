@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Tabs } from "@mantine/core";
 import { CurrentUserPlaylists } from "./TabMenuPlaylist";
-import { Artist } from "./TabsMenuArtist";
-import { SavedUserAlbums } from "./TabsMenuAlbum";
+import { CurrentUserSawedArtist } from "./TabsMenuArtist";
+import { CurrentUserSavedAlbums } from "./TabsMenuAlbum";
 
 const data = [
   { title: "Playlist", colore: "green" },
@@ -11,7 +11,6 @@ const data = [
 ];
 
 export const MenuTabs = () => {
-
   const [selectedTab, setSelectedTab] = useState("Playlist");
   const handleTabClick = (tabTitle: string) => {
     setSelectedTab(tabTitle);
@@ -35,8 +34,8 @@ export const MenuTabs = () => {
       </Tabs.List>
 
       {selectedTab === "Playlist" && <CurrentUserPlaylists />}
-      {selectedTab === "Album" && <SavedUserAlbums />}
-      {selectedTab === "Artist" && <Artist />}
+      {selectedTab === "Album" && <CurrentUserSavedAlbums />}
+      {selectedTab === "Artist" && <CurrentUserSawedArtist />}
     </Tabs>
   );
 };

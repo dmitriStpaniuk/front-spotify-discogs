@@ -2,10 +2,11 @@ import { Avatar, Group, ScrollArea, Text, LoadingOverlay } from "@mantine/core";
 import { IconPointFilled } from "@tabler/icons-react";
 import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
-import { useUserPlaylistsStore } from "@/app/stores/spotify/playlistsStore";
+import { useUserPlaylistsStore } from "@/app/stores/spotify/currentUserPlaylistsStore";
 import { useDisclosure } from "@mantine/hooks";
 import { DropdownMenu } from "./DropdownMenu";
 import classes from "./TabMenu.module.css";
+import { LikedSongsForPlaylistTab } from "./LikedSongsForPlaylistTab";
 
 export const CurrentUserPlaylists = () => {
   const [visible, { close }] = useDisclosure(true);
@@ -28,7 +29,8 @@ export const CurrentUserPlaylists = () => {
         overlayProps={{ radius: "sm", blur: 11 }}
         loaderProps={{ color: "green", type: "oval" }}
       />
-      <ScrollArea type="never">
+      <ScrollArea type="never" h={"81vh"}>
+        <LikedSongsForPlaylistTab />
         {userPlaylists.map((playlist) => (
           <Group
             wrap="nowrap"
@@ -41,7 +43,7 @@ export const CurrentUserPlaylists = () => {
             className={classes.link}
           >
             <Group>
-              <Avatar src={playlist.images[0]?.url} radius="md" />
+              <Avatar src={playlist.images[0]?.url} radius="md" h={38}/>
               <div>
                 <Text fz="xs" tt="uppercase" fw={700} c="gray">
                   {playlist.name}

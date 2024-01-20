@@ -13,3 +13,11 @@
     );
   }
 }
+/* .likeAvatar {
+  height: 36px;
+  width: 36px;
+  background-color: light-dark(
+      var(--mantine-color-blue-0),
+      var(--mantine-color-blue-6)
+    );
+} */
