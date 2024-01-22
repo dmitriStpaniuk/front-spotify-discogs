@@ -1,10 +1,12 @@
 import { currentUserLikedSongs } from "@/app/shared/spotify/currentUser";
-import { FollowedArtists, Page, SavedTrack, SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { Page, SavedTrack, SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { create } from "zustand";
 
 interface ResponseFolowedUserArtists extends Page<SavedTrack> {
   fetchUserLikedSongs: (params: { sdk: SpotifyApi }) => Promise<Page<SavedTrack> | null>;
 }
+
+
 
 export const userLikedSongsStore = create<ResponseFolowedUserArtists>((set, get) => ({
     href: '',
@@ -22,3 +24,4 @@ export const userLikedSongsStore = create<ResponseFolowedUserArtists>((set, get)
     return result;
   }
 }))
+

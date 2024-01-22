@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import { Avatar, Group, LoadingOverlay, ScrollArea, Text } from "@mantine/core";
-import { userAlbumStore } from "@/app/stores/spotify/currentUserAlbumStore";
 import { useDisclosure } from "@mantine/hooks";
 import { DropdownMenu } from "./DropdownMenu";
 import classes from "./TabMenu.module.css";
+import { userArtistsStore } from "@/app/stores/spotify/currentUserArtistStore";
 
-export const CurrentUserSavedAlbums = () => {
+export const CurrentUserSawedArtist = () => {
   const [visible, { close }] = useDisclosure(true);
-  const userPlaylists = userAlbumStore((state) => state.items);
-  const fetchUserAlbums = userAlbumStore((state) => state.fetchUserAlbums);
+  const userArtists = userArtistsStore((state) => state?.artists.items);
+  const fetchUserArtists = userArtistsStore((state) => state?.fetchUserArtists);
 
   useEffect(() => {
-    fetchUserAlbums({ sdk }).then(() => {
+    fetchUserArtists({ sdk }).then(() => {
       close();
     });
   }, []);
@@ -25,11 +25,11 @@ export const CurrentUserSavedAlbums = () => {
         overlayProps={{ radius: "sm", blur: 11 }}
         loaderProps={{ color: "green", type: "oval" }}
       />
-      <ScrollArea type="never" h={"81vh"}>
-        {userPlaylists?.map((album) => (
+      <ScrollArea type="never" h={"90vh"}>
+        {userArtists?.map((album) => (
           <Group
             wrap="nowrap"
-            key={album.album.id}
+            key={album.id}
             mt={10}
             style={{
               cursor: "pointer",
@@ -38,10 +38,10 @@ export const CurrentUserSavedAlbums = () => {
             className={classes.link}
           >
             <Group>
-              <Avatar src={album.album.images[0]?.url} radius="md" size={50} />
+              <Avatar src={album.images[0]?.url} radius="md" size={50} />
               <div>
                 <Text fz="xs" tt="uppercase" fw={700} c="gray">
-                  {album.album.name}
+                  {album.name}
                 </Text>
                 <Group>
                   <Text
@@ -49,12 +49,12 @@ export const CurrentUserSavedAlbums = () => {
                     c="dimmed"
                     style={{ wordWrap: "break-word", maxWidth: "300px" }}
                   >
-                    {album.album.artists.map((owner) => ` ${owner.name}`)}
+                    {album.genres.join(", ") + "."}
                   </Text>
                 </Group>
               </div>
             </Group>
-            <DropdownMenu typeData="album" />
+            <DropdownMenu typeData="artist" />
           </Group>
         ))}
       </ScrollArea>

@@ -1,5 +1,5 @@
-import { errorStore } from "@/app/stores/spotify/errorStore";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import { checkError } from "./lib/error";
 
 export const currentUserPlaylists = async ({ sdk }: { sdk: SpotifyApi }) => {
   if (typeof sdk !== 'object' || !(sdk instanceof SpotifyApi)) {
@@ -13,13 +13,10 @@ export const currentUserPlaylists = async ({ sdk }: { sdk: SpotifyApi }) => {
       throw new Error('Invalid SDK or missing playlists');
     }
   } catch (e) {
-    if (e instanceof Error) {
-      errorStore.setState({ message: e.message });
-    }
+    checkError(e)
     return null
   }
 }
-
 export const currentUserAlbums = async ({ sdk }: { sdk: SpotifyApi }) => {
   if (typeof sdk !== 'object' || !(sdk instanceof SpotifyApi)) {
     throw new Error('Invalid input parameter. Expected an object with a `sdk` property of type `SpotifyApi`');
@@ -32,13 +29,10 @@ export const currentUserAlbums = async ({ sdk }: { sdk: SpotifyApi }) => {
       throw new Error('Invalid SDK or missing playlists');
     }
   } catch (e) {
-    if (e instanceof Error) {
-      errorStore.setState({ message: e.message });
-    }
+    checkError(e)
     return null
   }
 }
-
 export const currentUserFollowedArtists = async ({ sdk }: { sdk: SpotifyApi }) => {
   if (typeof sdk !== 'object' || !(sdk instanceof SpotifyApi)) {
     throw new Error('Invalid input parameter. Expected an object with a `sdk` property of type `SpotifyApi`');
@@ -51,9 +45,7 @@ export const currentUserFollowedArtists = async ({ sdk }: { sdk: SpotifyApi }) =
       throw new Error('Invalid SDK or missing playlists');
     }
   } catch (e) {
-    if (e instanceof Error) {
-      errorStore.setState({ message: e.message });
-    }
+    checkError(e)
     return null
   }
 }
@@ -69,9 +61,7 @@ export const currentUserLikedSongs = async({ sdk }: { sdk: SpotifyApi }) => {
       throw new Error('Invalid SDK or missing playlists');
     }
   } catch (e) {
-    if (e instanceof Error) {
-      errorStore.setState({ message: e.message });
-    }
+    checkError(e)
     return null
   }
 }

@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   toggleDesktop,
 }) => {
   return (
-    <AppShell.Header>
+    <AppShell.Header >
       <Group h="100%" px="md">
         <Burger
           opened={mobileOpened}

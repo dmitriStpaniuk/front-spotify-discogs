@@ -1,26 +1,25 @@
 "use client";
 import { AppShell, Alert, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useMemo } from "react";
 import { Header } from "../components/header/Header";
 import React from "react";
 import { signIn } from "next-auth/react";
-import { MenuTabs } from "./components/MenuTabs";
+import { MenuTabs } from "./components/navbar/MenuTabs";
 import { IconExclamationCircle, IconLogin } from "@tabler/icons-react";
-import { errorStore } from "../stores/spotify/errorStore";
+import { useErrorStore } from "../stores/spotify/errorStore";
+import { ContentHeader } from "./components/main/header/components/ContentHeader";
 
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
-  const errorState = errorStore((state) => state.message);
+  const errorState = useErrorStore((state) => state.message);
 
-  const authError = useMemo(() => {
-    return errorState.includes("You should re-authenticate the user");
-  }, [errorState]);
+  const authError = errorState.includes("You should re-authenticate the user");
 
   return (
     <AppShell
+      transitionDuration={700}
       header={{ height: 60 }}
       footer={{ height: 60 }}
       navbar={{
@@ -40,11 +39,10 @@ export default function Spotify() {
         toggleMobile={toggleMobile}
         toggleDesktop={toggleDesktop}
       />
-      <AppShell.Navbar p="xs">
+      <AppShell.Navbar p="xs" zIndex={1} >
         <MenuTabs />
       </AppShell.Navbar>
       <AppShell.Main>
-        <h1 className="">Welcome to Spotify and Discogs</h1>
         {authError && (
           <Alert title="Ошибка аутентификации" icon={<IconExclamationCircle />}>
             Пожалуйста, повторите процесс аутентификации.
@@ -56,6 +54,7 @@ export default function Spotify() {
             />
           </Alert>
         )}
+        <ContentHeader />
       </AppShell.Main>
       <AppShell.Aside p="md">Aside</AppShell.Aside>
       <AppShell.Footer p="md">Footer</AppShell.Footer>

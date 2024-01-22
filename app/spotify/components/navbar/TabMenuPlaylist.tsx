@@ -10,10 +10,8 @@ import { LikedSongsForPlaylistTab } from "./LikedSongsForPlaylistTab";
 
 export const CurrentUserPlaylists = () => {
   const [visible, { close }] = useDisclosure(true);
-  const userPlaylists = useUserPlaylistsStore((state) => state.items);
-  const fetchUserPlaylists = useUserPlaylistsStore(
-    (state) => state.fetchUserPlaylists
-  );
+  const {items } = useUserPlaylistsStore();
+  const {fetchUserPlaylists} = useUserPlaylistsStore();
 
   useEffect(() => {
     fetchUserPlaylists({ sdk }).then(() => {
@@ -29,9 +27,9 @@ export const CurrentUserPlaylists = () => {
         overlayProps={{ radius: "sm", blur: 11 }}
         loaderProps={{ color: "green", type: "oval" }}
       />
-      <ScrollArea type="never" h={"81vh"}>
-        <LikedSongsForPlaylistTab />
-        {userPlaylists.map((playlist) => (
+      <ScrollArea type="never" h={"90vh"}>
+         <LikedSongsForPlaylistTab />
+        {items.map((playlist) => (
           <Group
             wrap="nowrap"
             key={playlist.id}
@@ -41,9 +39,10 @@ export const CurrentUserPlaylists = () => {
               justifyContent: "space-between",
             }}
             className={classes.link}
+            
           >
             <Group>
-              <Avatar src={playlist.images[0]?.url} radius="md" h={38}/>
+              <Avatar src={playlist.images[0]?.url} radius="md" size={44}/>
               <div>
                 <Text fz="xs" tt="uppercase" fw={700} c="gray">
                   {playlist.name}
