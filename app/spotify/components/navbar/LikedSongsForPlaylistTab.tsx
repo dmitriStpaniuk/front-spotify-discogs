@@ -4,22 +4,35 @@ import { IconHeart } from "@tabler/icons-react";
 import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import classes from "./TabMenu.module.css";
-import { useShowLikedTracksStore } from "@/app/stores/spotify/playlistsStore";
+import {
+  defaultPlaylist,
+  useShowLikedTracksStore,
+  useShowPlaylistStore,
+} from "@/app/stores/spotify/playlistsStore";
 
+const playlistName = "Liked Songs";
 export const LikedSongsForPlaylistTab = () => {
+  // общее количество лайков
   const { total } = userLikedSongsStore();
+  // получаю  метод fetchUserLikedSongs
   const { fetchUserLikedSongs } = userLikedSongsStore();
+  // просто треки
   const { items } = userLikedSongsStore();
-  const { setTracks } = useShowLikedTracksStore();
-
+  // сетаю в стор треки для отображения в таблице
+  const { setSavedPlaylist: setTracks } = useShowLikedTracksStore();
+  // для зануления основных плейлистов
+  const { setSimplifiedPlaylist: setPlaylistTracks } = useShowPlaylistStore();
+  // для отрисовки в навбаре
   useEffect(() => {
     fetchUserLikedSongs({ sdk }).then(() => {
       close();
     });
   }, [fetchUserLikedSongs]);
-
+  // отправляю для отрисовки в центральный компанент
   const handleClick = () => {
-    setTracks(items);
+    fetchUserLikedSongs({ sdk });
+    setPlaylistTracks(defaultPlaylist);
+    setTracks(items, total, playlistName);
   };
 
   return total ? (
@@ -43,7 +56,7 @@ export const LikedSongsForPlaylistTab = () => {
       </ActionIcon>
       <Group ml={5}>
         <Text fz="xs" tt="uppercase" fw={700} c="gray">
-          Liked Songs
+          {playlistName}
         </Text>
         <Group>
           <Text fz="xs" c="dimmed">

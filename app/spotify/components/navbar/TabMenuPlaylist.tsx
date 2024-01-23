@@ -7,17 +7,36 @@ import { useDisclosure } from "@mantine/hooks";
 import { DropdownMenu } from "./DropdownMenu";
 import classes from "./TabMenu.module.css";
 import { LikedSongsForPlaylistTab } from "./LikedSongsForPlaylistTab";
+import {
+  useShowLikedTracksStore,
+  useShowPlaylistStore,
+} from "@/app/stores/spotify/playlistsStore";
 
 export const CurrentUserPlaylists = () => {
   const [visible, { close }] = useDisclosure(true);
-  const {items } = useUserPlaylistsStore();
-  const {fetchUserPlaylists} = useUserPlaylistsStore();
+  // основные запросы за  плейлистами
+  const { items } = useUserPlaylistsStore();
+  const { fetchUserPlaylists } = useUserPlaylistsStore();
+  // сетаем треки в хранилище
+  const { setSimplifiedPlaylist: setPlaylistTracks } = useShowPlaylistStore();
+  // треки из хранилища
+  const { playlistTracks } = useShowPlaylistStore();
+  //  для зануления при клике на обычный плейлист
+  const { setSavedPlaylist: setTracks } = useShowLikedTracksStore();
 
   useEffect(() => {
     fetchUserPlaylists({ sdk }).then(() => {
       close();
     });
   }, []);
+
+  const handleClick = (playlistName: string) => {
+    const playlist = items.find((item) => item.name === playlistName);
+    if (playlist !== undefined) {
+      setTracks([], 0, "");
+      setPlaylistTracks(playlist);
+    }
+  };
 
   return (
     <>
@@ -28,9 +47,10 @@ export const CurrentUserPlaylists = () => {
         loaderProps={{ color: "green", type: "oval" }}
       />
       <ScrollArea type="never" h={"90vh"}>
-         <LikedSongsForPlaylistTab />
+        <LikedSongsForPlaylistTab />
         {items.map((playlist) => (
           <Group
+            onClick={() => handleClick(playlist.name)}
             wrap="nowrap"
             key={playlist.id}
             mt={10}
@@ -39,10 +59,9 @@ export const CurrentUserPlaylists = () => {
               justifyContent: "space-between",
             }}
             className={classes.link}
-            
           >
             <Group>
-              <Avatar src={playlist.images[0]?.url} radius="md" size={44}/>
+              <Avatar src={playlist.images[0]?.url} radius="md" size={44} />
               <div>
                 <Text fz="xs" tt="uppercase" fw={700} c="gray">
                   {playlist.name}

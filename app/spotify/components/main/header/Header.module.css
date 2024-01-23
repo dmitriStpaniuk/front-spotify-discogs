@@ -1,0 +1,17 @@
+.icon {
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+}
+
+.name {
+  font-size: rem(27px);
+  font-family: Greycliff CF, var(--mantine-font-family);
+  /* @media (max-width: 700px) {
+    font-size: rem(4px);
+  } */
+}
+.gradient {
+  background-image: light-dark(
+    linear-gradient(to bottom, #c5c5c5, #ffffff),
+    linear-gradient(to bottom, #442424, #242424)
+  );
+}

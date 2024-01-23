@@ -1,7 +1,12 @@
-import React from 'react'
+import React from "react";
+import { HeaderLikedSongs } from "./HeaderLikedSongs";
+import { HeaderPlaylistsSongs } from "./HeaderPlaylistsSongs";
 
-export const Header = () => {
+export const HeaderHero = () => {
   return (
-    <div>Header</div>
-  )
-}
+    <>
+      <HeaderLikedSongs />
+      <HeaderPlaylistsSongs />
+    </>
+  );
+};

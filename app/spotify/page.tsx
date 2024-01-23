@@ -7,7 +7,7 @@ import { signIn } from "next-auth/react";
 import { MenuTabs } from "./components/navbar/MenuTabs";
 import { IconExclamationCircle, IconLogin } from "@tabler/icons-react";
 import { useErrorStore } from "../stores/spotify/errorStore";
-import { ContentHeader } from "./components/main/header/components/ContentHeader";
+import { HeaderHero } from "./components/main/header/Header";
 
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -39,9 +39,10 @@ export default function Spotify() {
         toggleMobile={toggleMobile}
         toggleDesktop={toggleDesktop}
       />
-      <AppShell.Navbar p="xs" zIndex={1} >
-        <MenuTabs />
+      <AppShell.Navbar p="xs" zIndex={1}>
+        <MenuTabs /> 
       </AppShell.Navbar>
+
       <AppShell.Main>
         {authError && (
           <Alert title="Ошибка аутентификации" icon={<IconExclamationCircle />}>
@@ -54,7 +55,7 @@ export default function Spotify() {
             />
           </Alert>
         )}
-        <ContentHeader />
+        <HeaderHero />
       </AppShell.Main>
       <AppShell.Aside p="md">Aside</AppShell.Aside>
       <AppShell.Footer p="md">Footer</AppShell.Footer>
