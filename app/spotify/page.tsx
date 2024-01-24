@@ -8,6 +8,7 @@ import { MenuTabs } from "./components/navbar/MenuTabs";
 import { IconExclamationCircle, IconLogin } from "@tabler/icons-react";
 import { useErrorStore } from "../stores/spotify/errorStore";
 import { HeaderHero } from "./components/main/header/Header";
+import { TableTracks } from "./components/main/tableTracks/TableTracks";
 
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -56,6 +57,7 @@ export default function Spotify() {
           </Alert>
         )}
         <HeaderHero />
+        <TableTracks/>
       </AppShell.Main>
       <AppShell.Aside p="md">Aside</AppShell.Aside>
       <AppShell.Footer p="md">Footer</AppShell.Footer>

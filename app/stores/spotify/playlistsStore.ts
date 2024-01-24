@@ -6,10 +6,12 @@ interface StoreState {
   total: number;
   playlistName: string
   setSavedPlaylist: (tracks: SavedTrack[], total: number, playlistName: string) => void;
+  reset: () => void;
 }
 interface PlaylistState {
   playlistTracks: SimplifiedPlaylist;
   setSimplifiedPlaylist: (tracks: SimplifiedPlaylist) => void;
+  reset: () => void;
 }
 
 export const useShowLikedTracksStore = create<StoreState>((set, get) => ({
@@ -22,9 +24,10 @@ export const useShowLikedTracksStore = create<StoreState>((set, get) => ({
       total,
       playlistName
     })),
+    reset: () => set({ tracks: [], total: 0, playlistName: '' })
 }));
 
-export const defaultPlaylist: SimplifiedPlaylist = {
+const defaultPlaylist: SimplifiedPlaylist = {
   followers: { href: '', total: 0 },
   collaborative: false,
   description: '',
@@ -58,5 +61,6 @@ export const useShowPlaylistStore = create<PlaylistState>((set, get) => ({
   playlistTracks: defaultPlaylist,
   setSimplifiedPlaylist: (tracks: SimplifiedPlaylist) => set(() => ({
     playlistTracks: tracks
-  }))
+  })),
+  reset: () => { set({ playlistTracks: defaultPlaylist }) }
 }))

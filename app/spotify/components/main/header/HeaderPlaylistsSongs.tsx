@@ -25,14 +25,14 @@ export const HeaderPlaylistsSongs = () => {
             <Text fw={500} className={styles.name} p={0}>
               {playlistTracks.name}
             </Text>
-            <Group wrap="nowrap" gap={10} mt={3} align="bottom">
+            <Group wrap="nowrap" gap={10} mt={3} align="flex-end">
               {playlistTracks.images ? (
                 <Avatar src={playlistTracks.images[0].url} size="1.3rem" />
               ) : null}
               <Link href={`/artist/${playlistTracks.owner.href}`}>
                 {playlistTracks.owner.display_name}
               </Link>
-              <Text fz="xs" c="dimmed">
+              <Text fz="sm" c="dimmed">
                 {`${playlistTracks.tracks?.total} songs`}
               </Text>
             </Group>

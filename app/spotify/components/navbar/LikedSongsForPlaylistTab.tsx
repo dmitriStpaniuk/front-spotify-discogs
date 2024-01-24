@@ -5,7 +5,6 @@ import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import classes from "./TabMenu.module.css";
 import {
-  defaultPlaylist,
   useShowLikedTracksStore,
   useShowPlaylistStore,
 } from "@/app/stores/spotify/playlistsStore";
@@ -19,9 +18,9 @@ export const LikedSongsForPlaylistTab = () => {
   // просто треки
   const { items } = userLikedSongsStore();
   // сетаю в стор треки для отображения в таблице
-  const { setSavedPlaylist: setTracks } = useShowLikedTracksStore();
+  const { setSavedPlaylist } = useShowLikedTracksStore();
   // для зануления основных плейлистов
-  const { setSimplifiedPlaylist: setPlaylistTracks } = useShowPlaylistStore();
+  const { reset } = useShowPlaylistStore();
   // для отрисовки в навбаре
   useEffect(() => {
     fetchUserLikedSongs({ sdk }).then(() => {
@@ -31,8 +30,9 @@ export const LikedSongsForPlaylistTab = () => {
   // отправляю для отрисовки в центральный компанент
   const handleClick = () => {
     fetchUserLikedSongs({ sdk });
-    setPlaylistTracks(defaultPlaylist);
-    setTracks(items, total, playlistName);
+    // setSimplifiedPlaylist(defaultPlaylist);
+    reset();
+    setSavedPlaylist(items, total, playlistName);
   };
 
   return total ? (

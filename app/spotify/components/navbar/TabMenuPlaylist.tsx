@@ -18,11 +18,11 @@ export const CurrentUserPlaylists = () => {
   const { items } = useUserPlaylistsStore();
   const { fetchUserPlaylists } = useUserPlaylistsStore();
   // сетаем треки в хранилище
-  const { setSimplifiedPlaylist: setPlaylistTracks } = useShowPlaylistStore();
+  const { setSimplifiedPlaylist } = useShowPlaylistStore();
   // треки из хранилища
   const { playlistTracks } = useShowPlaylistStore();
   //  для зануления при клике на обычный плейлист
-  const { setSavedPlaylist: setTracks } = useShowLikedTracksStore();
+  const { reset } = useShowLikedTracksStore();
 
   useEffect(() => {
     fetchUserPlaylists({ sdk }).then(() => {
@@ -33,8 +33,8 @@ export const CurrentUserPlaylists = () => {
   const handleClick = (playlistName: string) => {
     const playlist = items.find((item) => item.name === playlistName);
     if (playlist !== undefined) {
-      setTracks([], 0, "");
-      setPlaylistTracks(playlist);
+      reset();
+      setSimplifiedPlaylist(playlist);
     }
   };
 
