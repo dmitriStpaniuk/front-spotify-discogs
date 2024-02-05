@@ -7,10 +7,11 @@ import { useDisclosure } from "@mantine/hooks";
 import { DropdownMenu } from "./DropdownMenu";
 import classes from "./TabMenu.module.css";
 import { LikedSongsForPlaylistTab } from "./LikedSongsForPlaylistTab";
-import {
-  useShowLikedTracksStore,
-  useShowPlaylistStore,
-} from "@/app/stores/spotify/playlistsStore";
+// import {
+//   useShowLikedTracksStore,
+//   useShowPlaylistStore,
+// } from "@/app/stores/spotify/playlistsStore";
+import { useNavbarStore } from "@/app/stores/spotify/closeNavbarStore";
 
 export const CurrentUserPlaylists = () => {
   const [visible, { close }] = useDisclosure(true);
@@ -18,11 +19,11 @@ export const CurrentUserPlaylists = () => {
   const { items } = useUserPlaylistsStore();
   const { fetchUserPlaylists } = useUserPlaylistsStore();
   // сетаем треки в хранилище
-  const { setSimplifiedPlaylist } = useShowPlaylistStore();
-  // треки из хранилища
-  const { playlistTracks } = useShowPlaylistStore();
-  //  для зануления при клике на обычный плейлист
-  const { reset } = useShowLikedTracksStore();
+  // const { setSimplifiedPlaylist } = useShowPlaylistStore();
+  // // треки из хранилища
+  // const { playlistTracks } = useShowPlaylistStore();
+  // //  для зануления при клике на обычный плейлист
+  // const { reset } = useShowLikedTracksStore();
 
   useEffect(() => {
     fetchUserPlaylists({ sdk }).then(() => {
@@ -33,8 +34,8 @@ export const CurrentUserPlaylists = () => {
   const handleClick = (playlistName: string) => {
     const playlist = items.find((item) => item.name === playlistName);
     if (playlist !== undefined) {
-      reset();
-      setSimplifiedPlaylist(playlist);
+      // reset();
+      // setSimplifiedPlaylist(playlist);
     }
   };
 

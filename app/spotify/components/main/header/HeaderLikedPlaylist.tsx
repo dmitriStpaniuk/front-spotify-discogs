@@ -1,4 +1,4 @@
-import { useShowLikedTracksStore } from "@/app/stores/spotify/playlistsStore";
+import { useUserLikedSongsStore } from "@/app/stores/spotify/currentUserLikedSongs";
 import { Group, Avatar, Text, ActionIcon } from "@mantine/core";
 import React from "react";
 import classes from "./Header.module.css";
@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { IconHeart } from "@tabler/icons-react";
 
 export const HeaderLikedSongs = () => {
-  const { total, playlistName } = useShowLikedTracksStore();
+  const { total, playlistName } = useUserLikedSongsStore();
   const { data: session } = useSession();
   const photoUser = session?.user?.image;
   const nameUser = session?.user?.name;

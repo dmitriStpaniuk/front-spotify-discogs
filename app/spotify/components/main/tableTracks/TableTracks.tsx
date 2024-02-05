@@ -1,28 +1,31 @@
+import React, { useEffect, useState } from "react";
+import classes from "./Table.module.css";
+import { useNavbarStore } from "@/app/stores/spotify/closeNavbarStore";
 import {
-  ScrollArea,
-  TextInput,
-  rem,
   Table,
-  Center,
-  Group,
   UnstyledButton,
-  Text,
+  Group,
+  Center,
+  rem,
   keys,
   Avatar,
+  TextInput,
+  Text,
 } from "@mantine/core";
 import {
-  IconChevronDown,
   IconChevronUp,
-  IconSearch,
+  IconChevronDown,
   IconSelector,
+  IconSearch,
+  IconClock,
+  IconHash,
 } from "@tabler/icons-react";
-import React, { useState } from "react";
-import classes from "./Table.module.css";
-import {
-  useShowLikedTracksStore,
-  useShowPlaylistStore,
-} from "@/app/stores/spotify/playlistsStore";
-import { userLikedSongsStore } from "@/app/stores/spotify/currentUserLikedSongs";
+import { formattedDate, formattedTime } from "@/app/lib/formatted";
+import { useUserLikedSongsStore } from "@/app/stores/spotify/currentUserLikedSongs";
+import sdk from "@/app/lib/spotify-sdk/ClientInstance";
+// import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "@/app/spotify/loading";
 
 interface RowData {
   Artist: string;
@@ -50,11 +53,20 @@ function Th({ children, reversed, sorted, onSort }: ThProps) {
           <Text fw={500} fz="sm">
             {children}
           </Text>
-          <Center className={classes.icon}>
+          <Center>
             <Icon style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
           </Center>
         </Group>
       </UnstyledButton>
+    </Table.Th>
+  );
+}
+function NonSortableTh({ children }: { children: React.ReactNode }) {
+  return (
+    <Table.Th>
+      <Text fw={500} fz="sm">
+        {children}
+      </Text>
     </Table.Th>
   );
 }
@@ -87,41 +99,26 @@ function sortData(
   );
 }
 export const TableTracks = () => {
+  const { total } = useUserLikedSongsStore();
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<keyof RowData | null>(null);
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const { tracks } = useShowLikedTracksStore();
-  const { playlistTracks } = useShowPlaylistStore();
+  const { items } = useUserLikedSongsStore();
   // const [sortedData, setSortedData] = useState(data);
+  // состояние навбара
+  const { isOpen } = useNavbarStore();
+  const { fetchAllUserLikedSongs } = useUserLikedSongsStore();
+  const { playlistName } = useUserLikedSongsStore();
 
-  const formattedDate = (date: string) => {
-    let fDate = new Date(date);
-    let options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-    let formattedDate = fDate.toLocaleDateString("en-US", options);
-    return formattedDate;
-  };
-  const formattedTime = (time:number) => {
-    let milliseconds = time;
-    let minutes = Math.floor(milliseconds / 60000);
-    let seconds = ((milliseconds % 60000) / 1000).toFixed(0);
-    if (seconds.length == 1) {
-      seconds = "0" + seconds;
-  }
-    return(minutes + ":" + seconds);
-  };
-
-  const data = tracks.map((track) => {
+  const data = items.map((track) => {
     return {
-      Artist: track.track.artists[0].name,
-      Album: track.track.album.name,
-      "Date Added": formattedDate(track.added_at),
-      Duration: formattedTime(track.track.duration_ms),
+      artist: track.track.artists[0].name,
+      album: track.track.album.name,
+      dateAdded: formattedDate(track.added_at),
+      duration: formattedTime(track.track.duration_ms),
       image: track.track.album.images[2].url,
       tarckName: track.track.name,
+      id: track.track.id,
     };
   });
 
@@ -131,80 +128,129 @@ export const TableTracks = () => {
     setSortBy(field);
     // setSortedData(sortData(data, { sortBy: field, reversed, search }));
   };
-  const rows = data.map((row) => (
-    <Table.Tr key={row.Artist}>
+  const handleClick = (id: string) => {
+    console.log(id);
+  };
+
+  const rows = data.map((row, index) => (
+    <Table.Tr
+      key={row.id}
+      className={classes.tableTr}
+      onClick={() => handleClick(row.id)}
+      // ref={index === data.length - 1 ? observerRef : null}
+    >
+      <Table.Td w={15} pl={20}>
+        {index + 1}
+      </Table.Td>
       <Table.Td>
-        <Group gap="sm">
+        <Group gap="sm" wrap="nowrap">
           <Avatar size={40} src={row.image} radius={5} />
           <div>
-            <Text fz="sm" fw={500}>
+            <Text
+              fz="sm"
+              fw={500}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: 270,
+              }}
+            >
               {row.tarckName}
             </Text>
             <Text fz="xs" c="dimmed">
-              {row.Artist}
+              {row.artist}
             </Text>
           </div>
         </Group>
       </Table.Td>
-      <Table.Td>{row.Album}</Table.Td>
-      <Table.Td>{row["Date Added"]}</Table.Td>
-      <Table.Td>{row.Duration}</Table.Td>
+      <Table.Td
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          maxWidth: 160,
+        }}
+      >
+        {row.album}
+      </Table.Td>
+      {!isOpen && <Table.Td>{row["dateAdded"]}</Table.Td>}
+      <Table.Td>{row.duration}</Table.Td>
     </Table.Tr>
   ));
 
   return (
     <>
-      <TextInput
-        placeholder="Search by any field"
-        mb="md"
-        leftSection={
-          <IconSearch
-            style={{ width: rem(16), height: rem(16) }}
-            stroke={1.5}
+      {playlistName === "LikedPlaylist" && (
+        <>
+          <TextInput
+            placeholder="Search by any field"
+            mb="md"
+            leftSection={
+              <IconSearch
+                style={{ width: rem(16), height: rem(16) }}
+                stroke={1.5}
+              />
+            }
           />
-        }
-        // value={search}
-        // onChange={handleSearchChange}
-      />
-      <Table
-        horizontalSpacing="md"
-        verticalSpacing="xs"
-        // miw={700}
-      >
-        <Table.Tbody>
-          <Table.Tr>
-            <Th
-              sorted={sortBy === "Artist"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("Artist")}
-            >
-              Artist
-            </Th>
-            <Th
-              sorted={sortBy === "Album"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("Album")}
-            >
-              Album
-            </Th>
-            <Th
-              sorted={sortBy === "Date Added"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("Date Added")}
-            >
-              Date Added
-            </Th>
-            <Th
-              sorted={sortBy === "Duration"}
-              reversed={reverseSortDirection}
-              onSort={() => setSorting("Duration")}
-            >
-              Duration
-            </Th>
-          </Table.Tr>
-        </Table.Tbody>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+          <InfiniteScroll
+            pullDownToRefreshThreshold={50}
+            scrollableTarget="scrollableDiv"
+            dataLength={items.length}
+            next={() => {
+              // Здесь вызывается функция для загрузки следующей порции данных
+              fetchAllUserLikedSongs({ sdk });
+            }}
+            hasMore={items.length < total}
+            loader={
+              <Loading/>
+            }
+            // useWindow={false}
+          >
+            <Table horizontalSpacing="md" verticalSpacing="xs">
+              <Table.Tbody>
+                <Table.Tr>
+                  <NonSortableTh>
+                    <IconHash size={15} />
+                  </NonSortableTh>
+                  <Th
+                    sorted={sortBy === "Artist"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("Artist")}
+                  >
+                    Artist
+                  </Th>
+                  <Th
+                    sorted={sortBy === "Album"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("Album")}
+                  >
+                    Album
+                  </Th>
+                  {!isOpen && (
+                    <Th
+                      sorted={sortBy === "Date Added"}
+                      reversed={reverseSortDirection}
+                      onSort={() => setSorting("Date Added")}
+                    >
+                      Date Added
+                    </Th>
+                  )}
+                  <Th
+                    sorted={sortBy === "Duration"}
+                    reversed={reverseSortDirection}
+                    onSort={() => setSorting("Duration")}
+                  >
+                    <IconClock size={15} />
+                  </Th>
+                </Table.Tr>
+              </Table.Tbody>
+
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </InfiniteScroll>
+        </>
+      )}
     </>
   );
 };

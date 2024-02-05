@@ -2,21 +2,26 @@
 import { AppShell, Alert, NavLink } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Header } from "../components/header/Header";
-import React from "react";
+import React, { useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { MenuTabs } from "./components/navbar/MenuTabs";
 import { IconExclamationCircle, IconLogin } from "@tabler/icons-react";
 import { useErrorStore } from "../stores/spotify/errorStore";
 import { HeaderHero } from "./components/main/header/Header";
 import { TableTracks } from "./components/main/tableTracks/TableTracks";
+import { useNavbarStore } from "../stores/spotify/closeNavbarStore";
 
 export default function Spotify() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
 
   const errorState = useErrorStore((state) => state.message);
-
   const authError = errorState.includes("You should re-authenticate the user");
+  // сет в стор boolean для отслеживания состояния навбара
+  const { toggleIsOpen } = useNavbarStore();
+  useEffect(() => {
+    toggleIsOpen(desktopOpened);
+  }, [desktopOpened]);
 
   return (
     <AppShell
@@ -31,7 +36,7 @@ export default function Spotify() {
       aside={{
         width: 300,
         breakpoint: "md",
-        collapsed: { desktop: false, mobile: true },
+        collapsed: { desktop: true, mobile: true },
       }}
     >
       <Header
@@ -41,7 +46,7 @@ export default function Spotify() {
         toggleDesktop={toggleDesktop}
       />
       <AppShell.Navbar p="xs" zIndex={1}>
-        <MenuTabs /> 
+        <MenuTabs />
       </AppShell.Navbar>
 
       <AppShell.Main>
@@ -57,7 +62,7 @@ export default function Spotify() {
           </Alert>
         )}
         <HeaderHero />
-        <TableTracks/>
+        <TableTracks />
       </AppShell.Main>
       <AppShell.Aside p="md">Aside</AppShell.Aside>
       <AppShell.Footer p="md">Footer</AppShell.Footer>

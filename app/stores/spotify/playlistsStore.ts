@@ -1,31 +1,31 @@
 import { SavedTrack, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 import { create } from "zustand";
 
-interface StoreState {
-  tracks: SavedTrack[];
-  total: number;
-  playlistName: string
-  setSavedPlaylist: (tracks: SavedTrack[], total: number, playlistName: string) => void;
-  reset: () => void;
-}
+// interface StoreState {
+//   tracks: SavedTrack[];
+//   total: number;
+//   playlistName: string
+//   setSavedPlaylist: (tracks: SavedTrack[], total: number, playlistName: string) => void;
+//   reset: () => void;
+// }
 interface PlaylistState {
   playlistTracks: SimplifiedPlaylist;
   setSimplifiedPlaylist: (tracks: SimplifiedPlaylist) => void;
   reset: () => void;
 }
 
-export const useShowLikedTracksStore = create<StoreState>((set, get) => ({
-  tracks: [],
-  total: 0,
-  playlistName: '',
-  setSavedPlaylist: (tracks, total, playlistName) =>
-    set(() => ({
-      tracks,
-      total,
-      playlistName
-    })),
-    reset: () => set({ tracks: [], total: 0, playlistName: '' })
-}));
+// export const useShowLikedTracksStore = create<StoreState>((set, get) => ({
+//   tracks: [],
+//   total: 0,
+//   playlistName: '',
+//   setSavedPlaylist: (tracks, total, playlistName) =>
+//     set(() => ({
+//       tracks,
+//       total,
+//       playlistName
+//     })),
+//     reset: () => set({ tracks: [], total: 0, playlistName: '' })
+// }));
 
 const defaultPlaylist: SimplifiedPlaylist = {
   followers: { href: '', total: 0 },

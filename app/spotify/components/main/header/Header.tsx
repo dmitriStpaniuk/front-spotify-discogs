@@ -1,12 +1,12 @@
 import React from "react";
-import { HeaderLikedSongs } from "./HeaderLikedSongs";
-import { HeaderPlaylistsSongs } from "./HeaderPlaylistsSongs";
+import { HeaderLikedSongs } from "./HeaderLikedPlaylist";
+import { HeaderTablePlaylistsName } from "./HeaderPlaylists";
 
 export const HeaderHero = () => {
   return (
     <>
       <HeaderLikedSongs />
-      <HeaderPlaylistsSongs />
+      <HeaderTablePlaylistsName />
     </>
   );
 };

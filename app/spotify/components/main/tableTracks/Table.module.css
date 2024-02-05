@@ -6,12 +6,44 @@
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
 
   @mixin hover {
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
   }
 }
 
-.icon {
-  width: rem(21px);
-  height: rem(21px);
-  border-radius: rem(21px);
+.text {
+  /* display: inline-block; */
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.link {
+  padding: rem(5px);
+  border-radius: rem(5px);
+  width: 100%;
+  margin-right: rem(20px);
+  /* justify-content: space-between; */
+  @media (max-width: --mantine-breakpoint-sm) {
+    height: rem(42px);
+    width: 100%;
+  }
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+}
+.tableTr {
+  cursor: pointer;
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
 }

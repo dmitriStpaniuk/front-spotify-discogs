@@ -1,43 +1,30 @@
-import { userLikedSongsStore } from "@/app/stores/spotify/currentUserLikedSongs";
+import { useUserLikedSongsStore } from "@/app/stores/spotify/currentUserLikedSongs";
 import { ActionIcon, Group, Text } from "@mantine/core";
 import { IconHeart } from "@tabler/icons-react";
 import React, { useEffect } from "react";
 import sdk from "@/app/lib/spotify-sdk/ClientInstance";
 import classes from "./TabMenu.module.css";
-import {
-  useShowLikedTracksStore,
-  useShowPlaylistStore,
-} from "@/app/stores/spotify/playlistsStore";
 
 const playlistName = "Liked Songs";
 export const LikedSongsForPlaylistTab = () => {
   // общее количество лайков
-  const { total } = userLikedSongsStore();
-  // получаю  метод fetchUserLikedSongs
-  const { fetchUserLikedSongs } = userLikedSongsStore();
-  // просто треки
-  const { items } = userLikedSongsStore();
-  // сетаю в стор треки для отображения в таблице
-  const { setSavedPlaylist } = useShowLikedTracksStore();
-  // для зануления основных плейлистов
-  const { reset } = useShowPlaylistStore();
+  const { total } = useUserLikedSongsStore();
+  // отрисовка плейлиста лайков
+  const { fetchUserLikedSongs } = useUserLikedSongsStore();
   // для отрисовки в навбаре
+  const { setLikedPlaylistName } = useUserLikedSongsStore();
+
   useEffect(() => {
-    fetchUserLikedSongs({ sdk }).then(() => {
-      close();
-    });
+    fetchUserLikedSongs({ sdk })
   }, [fetchUserLikedSongs]);
-  // отправляю для отрисовки в центральный компанент
-  const handleClick = () => {
-    fetchUserLikedSongs({ sdk });
-    // setSimplifiedPlaylist(defaultPlaylist);
-    reset();
-    setSavedPlaylist(items, total, playlistName);
+  // сетаю имя плейлиста в стор для реагировани на отрисовку в таблице
+  const handleClick = (playlistName: string) => {
+    setLikedPlaylistName(playlistName);
   };
 
   return total ? (
     <Group
-      onClick={handleClick}
+      onClick={() => handleClick("LikedPlaylist")}
       wrap="nowrap"
       mt={10}
       // p={15}

@@ -1,10 +1,10 @@
 import { useShowPlaylistStore } from "@/app/stores/spotify/playlistsStore";
 import { Group, Avatar, Text } from "@mantine/core";
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./Header.module.css";
 import Link from "next/dist/client/link";
 
-export const HeaderPlaylistsSongs = () => {
+export const HeaderTablePlaylistsName = () => {
   const { playlistTracks } = useShowPlaylistStore();
 
   return (
